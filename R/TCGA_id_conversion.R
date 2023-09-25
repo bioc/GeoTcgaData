@@ -23,5 +23,8 @@ id_conversion_TCGA <- function(profiles, toType = "SYMBOL") {
     rownames(genes) <- genes[, 1]
     profiles2 <- as.matrix(profiles)
     rownames(profiles2) <- genes[rownames(profiles), 2]
+    profiles2 <- profiles2[!is.na(rownames(profiles2)), ]
     return(profiles2)
 }
+
+
