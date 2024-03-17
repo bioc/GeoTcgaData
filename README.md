@@ -192,8 +192,8 @@ install it successfully, you can download each dependent package
 separately(Source or Binary) and install it locally.
 
 If your methylation data was downloaded from [UCSC
-Xena](http://xena.ucsc.edu/), you can use `methydifferential_ucsc` to
-get differential genes.
+Xena](http://xena.ucsc.edu/), you can use
+`differential_methy(ucscData = TRUE)` to get differential genes.
 
 ``` r
 methy_file <- "TCGA.THCA.sampleMap_HumanMethylation450.gz"
@@ -350,7 +350,7 @@ result <- id_conversion_TCGA(profile)
 #> 
 #> 'select()' returned 1:1 mapping between keys and columns
 #> Warning in clusterProfiler::bitr(rownames(profiles), fromType = "ENSEMBL", :
-#> 33.33% of input gene IDs are fail to map...
+#> 22.22% of input gene IDs are fail to map...
 ```
 
 The parameter profile is a data.frame or matrix of gene expression data
@@ -362,7 +362,7 @@ versions, we will use `clusterProfiler::bitr` for ID conversion.
 
 ``` r
 library(clusterProfiler)
-#> clusterProfiler v4.6.0  For help: https://yulab-smu.top/biomedical-knowledge-mining-book/
+#> clusterProfiler v4.10.0  For help: https://yulab-smu.top/biomedical-knowledge-mining-book/
 #> 
 #> If you use clusterProfiler in published research, please cite:
 #> T Wu, E Hu, S Xu, M Chen, P Guo, Z Dai, T Feng, L Zhou, W Tang, L Zhan, X Fu, S Liu, X Bo, and G Yu. clusterProfiler 4.0: A universal enrichment tool for interpreting omics data. The Innovation. 2021, 2(3):100141
@@ -401,6 +401,9 @@ library(org.Hs.eg.db)
 #> The following object is masked from 'package:clusterProfiler':
 #> 
 #>     rename
+#> The following object is masked from 'package:utils':
+#> 
+#>     findMatches
 #> The following objects are masked from 'package:base':
 #> 
 #>     expand.grid, I, unname
@@ -419,7 +422,7 @@ library(org.Hs.eg.db)
 #>     select
 bitr(c("A2ML1", "A2ML1-AS1", "A4GALT", "A12M1", "AAAS"), fromType = "SYMBOL", 
      toType = "ENSEMBL", OrgDb = org.Hs.eg.db, drop = FALSE)
-#> 'select()' returned 1:1 mapping between keys and columns
+#> 'select()' returned 1:many mapping between keys and columns
 #> Warning in bitr(c("A2ML1", "A2ML1-AS1", "A4GALT", "A12M1", "AAAS"), fromType =
 #> "SYMBOL", : 40% of input gene IDs are fail to map...
 #>      SYMBOL         ENSEMBL
@@ -428,6 +431,7 @@ bitr(c("A2ML1", "A2ML1-AS1", "A4GALT", "A12M1", "AAAS"), fromType = "SYMBOL",
 #> 3    A4GALT ENSG00000128274
 #> 4     A12M1            <NA>
 #> 5      AAAS ENSG00000094914
+#> 6      AAAS ENSG00000291836
 ```
 
 2.  The function `countToFpkm` and `countToTpm` could convert count data
@@ -444,7 +448,7 @@ result <- countToFpkm(lung_squ_count2,
 )
 #> 'select()' returned 1:1 mapping between keys and columns
 #> Warning in clusterProfiler::bitr(rownames(gene_cov), fromType = "ENTREZID", :
-#> 0.06% of input gene IDs are fail to map...
+#> 0.07% of input gene IDs are fail to map...
 result
 #>        sample1  sample2  sample3
 #> DISC1 11449.25 18318.79 20036.18
@@ -462,7 +466,7 @@ result <- countToTpm(lung_squ_count2,
 )
 #> 'select()' returned 1:1 mapping between keys and columns
 #> Warning in clusterProfiler::bitr(rownames(gene_cov), fromType = "ENTREZID", :
-#> 0.06% of input gene IDs are fail to map...
+#> 0.07% of input gene IDs are fail to map...
 result
 #>        sample1  sample2  sample3
 #> DISC1 104024.7 177787.5 197827.0

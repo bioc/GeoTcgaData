@@ -54,10 +54,14 @@
 #' rownames(arrayData) <- paste0("gene", 1:25)
 #' colnames(arrayData) <- paste0("sample", 1:8)
 #' group <- c(rep("group1", 4), rep("group2", 4))
+#' names(group) <- colnames(arrayData)
 #' result <- differential_array(df = arrayData, group = group)
 differential_array <- function(df, group, method = "limma", 
                                 adjust.method = "BH") {
     method <- match.arg(method, c("limma", "ttest", "wilcox"))
+    samples <- intersect(colnames(df), names(group))
+    group <- group[samples]
+    df <- df[, samples]
     if (method == "limma") {
         result <- differential_limma(df, group, adjust.method = adjust.method)
     } else {

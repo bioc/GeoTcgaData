@@ -157,7 +157,7 @@ differential_gene <- differential_methy(cpgData = merge_result, sampleGroup = sa
 
 
 
-If your methylation data was downloaded from [UCSC Xena](http://xena.ucsc.edu/), you can use `methydifferential_ucsc` to get differential genes.
+If your methylation data was downloaded from [UCSC Xena](http://xena.ucsc.edu/), you can use `differential_methy(ucscData = TRUE)` to get differential genes.
 
 ```{r eval=FALSE}
 methy_file <- "TCGA.THCA.sampleMap_HumanMethylation450.gz"
@@ -171,7 +171,7 @@ cpg_gene <- hm450.manifest.hg19[, c("probeID", "gene_HGNC")]
 # ann <- getAnnotation(IlluminaHumanMethylation450kanno.ilmn12.hg19)
 # class(ann) <- "data.frame"
 # cpg_gene <- ann[,c("Name", "UCSC_RefGene_Name", "UCSC_RefGene_Group")]
-
+library(IlluminaHumanMethylation450kanno.ilmn12.hg19)
 methy_df <- differential_methy(methy, cpg_gene, ucscData = TRUE)
 ```
 

@@ -93,20 +93,20 @@ differential_methy  <- function(cpgData, sampleGroup,
         sampleGroup <- colData(cpgData2)[, groupCol]
         names(sampleGroup) <- rownames(colData(cpgData2))
     } else {
-        if (inherits(cpgData,  "SummarizedExperiment")) { 
+        if (inherits(cpgData,  "list")) { 
             cpgData <- cpgData[[1]]
         }
     }
 
 
     if (ucscData) {
-        class(methy) <- "data.frame"
-        rownames(methy) <- methy[, 1]
-        cpgs <- rownames(methy)
-        methy <- methy[, -1]
+        class(cpgData) <- "data.frame"
+        rownames(cpgData) <- cpgData[, 1]
+        cpgs <- rownames(cpgData)
+        cpgData <- cpgData[, -1]
         group <- sampleGroup
         if (is.null(group)) {
-            group <- lapply(colnames(methy), function(x) {
+            group <- lapply(colnames(cpgData), function(x) {
                 strsplit(x, "-")[[1]][4]
             }) |> unlist()
     
@@ -300,7 +300,7 @@ Merge_methy_tcga <- function(dirr = NULL) {
     filePath <- file.path(dirr, tcga_dir[1])
     methyFile <- get_methy_df(filePath)
     methyResult <- matrix(0, nrow = nrow(methyFile), ncol = length(tcga_dir))
-    rownames(methyResult) <- methyFile[, "Composite Element REF"]
+    rownames(methyResult) <- methyFile[, 1]
     samples <- rep(0, length(tcga_dir))
     methyResult[, 1] <- methyFile[, 2]
     samples[1] <- colnames(methyFile)[2]
@@ -325,13 +325,19 @@ Merge_methy_tcga <- function(dirr = NULL) {
 #' @noRd
 get_methy_df <- function(filePath) {
     methyDir <- dir(filePath)
-    for (j in seq_len(length(methyDir))) {
-        if (length(grep("jhu-usc", methyDir[j])) > 0) {
-            file_name <- file.path(filePath, dir(filePath)[j])
-            sample <- unlist(strsplit(dir(filePath)[j], "\\."))[6]
+    if (length(methyDir) == 1) {
+        file_name <- file.path(filePath, methyDir)
+        sample <- unlist(strsplit(methyDir, "\\."))[1]
+    } else {
+        for (j in seq_len(length(methyDir))) {
+            if (length(grep("jhu-usc", methyDir[j])) > 0) {
+                file_name <- file.path(filePath, dir(filePath)[j])
+                sample <- unlist(strsplit(dir(filePath)[j], "\\."))[6]
+            }
         }
     }
-    methyFile <- data.table::fread(file_name, header = TRUE)
+
+    methyFile <- data.table::fread(file_name, header = FALSE)
     class(methyFile) <- "data.frame"
     colnames(methyFile)[2] <- sample
     return(methyFile)
